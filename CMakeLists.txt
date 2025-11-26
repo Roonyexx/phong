@@ -10,7 +10,9 @@ find_package(imgui CONFIG REQUIRED)
 find_package(OpenGL REQUIRED)
 find_package(glm CONFIG REQUIRED)
 
-file(GLOB_RECURSE SOURCES src/*.cpp)
+set(SOURCES 
+    src/main.cpp
+    src/ObjectByCurveRotate.cpp)
 
 add_executable(${PROJECT_NAME} ${SOURCES})
 
