@@ -1,6 +1,5 @@
 #include "ObjectByCurveRotate.hpp"
 
-//крутится оно не относительно центра координат.
 void ObjectByCurveRotate::curveRotate(float const angle)
 {
     if (angle <= 0.0f) return;
@@ -17,8 +16,8 @@ void ObjectByCurveRotate::curveRotate(float const angle)
     for (size_t s{ 1 }; s < steps; s++)
     {
         glm::mat4 rotateMat { glm::rotate(glm::mat4{ 1.0f }, 
-                        glm::radians(angle * s),
-                        glm::vec3{ 0.0f, 1.0f, 0.0f}) };
+                              glm::radians(angle * s),
+                              glm::vec3{ 0.0f, 1.0f, 0.0f}) };
 
         for(auto const& vert : curve.verts)
         {
@@ -28,22 +27,22 @@ void ObjectByCurveRotate::curveRotate(float const angle)
             this->verts.push_back(v);
         }
 
-        this->triangle(curve.verts.size() * (s - 1), curve.verts.size() * s, curve.verts.size()); // c.verts.size = 6 steps = 4; 1(0, 6) 2(6, 12) 3(12, 18) 
+        this->triangle(profileSize * (s - 1), profileSize * s, profileSize - 1); // c.verts.size = 6 steps = 4; 1(0, 6) 2(6, 12) 3(12, 18) 
     }
-    
+    this->triangle(profileSize * (steps - 1), 0, profileSize - 1);
 }
 
-void ObjectByCurveRotate::triangle(size_t start, size_t end, uint16_t per)
+void ObjectByCurveRotate::triangle(size_t firstCurveStart, size_t secondCurveStart, uint32_t per)
 {
     struct Triangle 
     {
-        uint16_t A, B, C;
+        uint32_t A, B, C;
     };
 
-    for(size_t i{ start }; i < end; i++) //0 1 7, 0 6 7; 1 2 8, 1 7 8; 2 3 9, 2 8 9;
+    for(size_t i{}; i < per; i++) //0 1 7, 0 6 7; 1 2 8, 1 7 8; 2 3 9, 2 8 9;
     {
-        Triangle t1{ i, i+1, i+1+per };
-        Triangle t2{ i, i+per, i+per+1 };
+        Triangle t1{ firstCurveStart + i, secondCurveStart + i, firstCurveStart + i + 1 };
+        Triangle t2{ firstCurveStart + i + 1, secondCurveStart + i, secondCurveStart + i + 1 };
 
         indices.push_back(t1.A); indices.push_back(t1.B); indices.push_back(t1.C);
         indices.push_back(t2.A); indices.push_back(t2.B); indices.push_back(t2.C);

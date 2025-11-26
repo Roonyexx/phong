@@ -8,11 +8,11 @@ class ObjectByCurveRotate
 private:
     Curve curve;
     std::vector<Vertex> verts;
-    std::vector<Edge> edges;
+    //std::vector<Edge> edges;
     std::vector<uint32_t> indices;
 
     void curveRotate(float const angle);
-    void triangle(size_t start, size_t end, uint16_t per);
+    void triangle(size_t firstCurveStart, size_t secondCurveStart, uint32_t per);
 public:
     ObjectByCurveRotate(Curve const& curve, float const rotAngle);
 };

@@ -17,23 +17,25 @@ inline glm::vec3 circlePoint(float radius, glm::vec3 const& center, glm::vec2 co
     float dz{ yz[1] - center.z };
 
     float inside{ radius * radius - dy * dy - dz * dz };
+    inside = std::max(inside, 0.0f);
     float x{ center.x + sqrt(inside) };
 
     return { x, yz[0], yz[1] };
 }
 
-inline Curve getHalfCircle(float radius=1.0f, glm::vec3 const& center={0.0f,0.0f,0.0f}, uint8_t numOfPartions=10)
+inline Curve getHalfCircle(float radius=1.0f, glm::vec3 const& center={0.0f,0.0f,0.0f}, uint8_t numOfPartions=6)
 {
     float step{ 2 * radius / numOfPartions };
-    Curve curve;
-    for(float y{ center.y - radius }, en{ center.y + radius }; y < en; y += step)
+    Curve curve; float y{ center.y - radius };
+    for(size_t i{}; i <= numOfPartions; i++)
     {
         Vertex vert;
         vert.cord = circlePoint(radius, center, {y, center.z});
         curve.verts.push_back(vert);
+        y += step;
     }
 
-    for(size_t i{}, len{ numOfPartions }; i < len; i++)
-        curve.edges.push_back({i, i+1});
+    // for(size_t i{}, len{ numOfPartions }; i < len; i++)
+    //     curve.edges.push_back({i, i+1});
     return curve;
 }
