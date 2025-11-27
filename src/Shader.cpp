@@ -1,6 +1,6 @@
 #include "Shader.hpp"
 
-std::string getFileContent(std::string const &filename)
+inline std::string getFileContent(std::string const &filename)
 {
     std::ifstream in{ filename, std::ios::binary };
     if(in)

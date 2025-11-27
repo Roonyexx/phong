@@ -1,8 +1,5 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
-#include <imgui.h>
-#include <imgui_impl_glfw.h>
-#include <imgui_impl_opengl3.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -15,8 +12,7 @@
 #include "VBO.hpp"
 #include "EBO.hpp"
 #include "Shader.hpp"
-
-
+#include "Camera.hpp"
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height) 
 {
@@ -29,8 +25,11 @@ int main()
     if (!glfwInit()) { std::cerr << "glfwInit failed\n"; return -1; }
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     GLFWwindow* window = glfwCreateWindow(width, height, "pusa", nullptr, nullptr);
     if (!window) { std::cerr<<"failed to create window\n"; glfwTerminate(); return -1; }
+
+
     glfwMakeContextCurrent(window);
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) { std::cerr<<"failed to init glad\n"; return -1; }
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
@@ -70,11 +69,11 @@ int main()
     vao.linkAttrib(vbo, 1, 3, GL_FLOAT, 6*sizeof(float), (void *)(3 * sizeof(float)));
 
     glm::mat4 model{ 1.0f }, view{ 1.0f }, proj{ glm::perspective(glm::radians(45.0f), (float)width / height, 0.1f, 100.0f) };
-    GLint modelLoc{ glGetUniformLocation(shaderProgram.id, "model") }, 
-          viewLoc{ glGetUniformLocation(shaderProgram.id, "view") }, 
-          projLoc{ glGetUniformLocation(shaderProgram.id, "proj") };
+    GLint modelLoc{ glGetUniformLocation(shaderProgram.id, "model") };
 
-    view = glm::translate(view, { 0.0f, 0.0f, -3.0f });
+    //view = glm::translate(view, { 0.0f, 0.0f, -3.0f });
+
+    OrbitalCamera camera{ {0.0f, 0.0f, 6.0f}, proj };
 
 
     vao.unbind();
@@ -88,12 +87,17 @@ int main()
         glClearColor(0.9f,0.9f,0.9f,1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        model = glm::rotate(model, glm::radians(1.0f), { 0.0f, 1.0f, 0.0f });
+
+        //model = glm::rotate(model, glm::radians(1.0f), { 0.0f, 1.0f, 0.0f });
+        //camera.cameraMove(glm::rotate(glm::mat4(1.0f), glm::radians(1.0f), {1.0f, 0.0f, 0.0f}));
+        //camera.rotateArounOrigin(glm::radians(1.0f), {1.0f, 0.0f, 0.0f}); 
+        camera.inputs(window);
 
         shaderProgram.activate();
         glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-        glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
-        glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(proj));
+        // glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
+        // glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(proj));
+        camera.setCameraMatrix(shaderProgram, "camMat");
 
         vao.bind();
         glDrawElements(GL_TRIANGLE_FAN, sizeof(indices)/sizeof(int), GL_UNSIGNED_INT, 0);

@@ -3,7 +3,7 @@
 #include <string>
 #include <fstream>
 
-std::string getFileContent(std::string const& filename);
+inline std::string getFileContent(std::string const& filename);
 class Shader
 {
 public:

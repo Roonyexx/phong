@@ -16,7 +16,8 @@ set(SOURCES
     src/VAO.cpp
     src/VBO.cpp
     src/EBO.cpp
-    src/Shader.cpp)
+    src/Shader.cpp
+    src/Camera.cpp)
 
 add_executable(${PROJECT_NAME} ${SOURCES})
 
