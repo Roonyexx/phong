@@ -60,6 +60,10 @@
         "xutility": "cpp",
         "fstream": "cpp",
         "numbers": "cpp",
-        "sstream": "cpp"
+        "sstream": "cpp",
+        "chrono": "cpp",
+        "filesystem": "cpp",
+        "forward_list": "cpp",
+        "ratio": "cpp"
     }
 }
