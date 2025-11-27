@@ -1,6 +1,6 @@
 #include "Camera.hpp"
-
-Camera::Camera(glm::vec3 position, glm::mat4 proj) : position{ position }, proj{ proj }, up{ 0.0f, 1.0f, 0.0f }, orientation{ 0.0f, 0.0f, -1.0f }, sensitivity{1.0f}
+#include <iostream>
+Camera::Camera(glm::vec3 position, glm::mat4 proj) : position{ position }, proj{ proj }, up{ 0.0f, 1.0f, 0.0f }, orientation{ 0.0f, 0.0f, -1.0f }, sensitivity{10.0f}
 { }
 
 void Camera::setCameraMatrix(Shader& shader, char const* uniform)
@@ -56,7 +56,7 @@ void OrbitalCamera::orbitDelta(float deltaYaw, float deltaPitch)
     updatePositionFromOrbit();
 }
 
-void OrbitalCamera::inputs(GLFWwindow *window)
+void OrbitalCamera::inputs(GLFWwindow *window, double dt)
 {
     static bool firstClick{ true };
     int state{ glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) };
@@ -65,7 +65,8 @@ void OrbitalCamera::inputs(GLFWwindow *window)
         double mouseX{}, mouseY{};
         glfwGetCursorPos(window, &mouseX, &mouseY);
         if (firstClick) { lastMouseX = mouseX; lastMouseY = mouseY; firstClick = false; }
-        orbitDelta(glm::radians((lastMouseX - mouseX) * sensitivity), glm::radians((lastMouseY - mouseY) * sensitivity));
+        orbitDelta(glm::radians((lastMouseX - mouseX) * sensitivity * dt), 
+                   glm::radians((lastMouseY - mouseY) * sensitivity * dt));
         lastMouseX = mouseX; lastMouseY = mouseY;
     }
     else if(state == GLFW_RELEASE)

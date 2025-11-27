@@ -53,3 +53,13 @@ ObjectByCurveRotate::ObjectByCurveRotate(Curve const& curve, float const rotAngl
 {
     curveRotate(rotAngle);
 }
+
+std::vector<Vertex> ObjectByCurveRotate::getVerts() const
+{
+    return verts;
+}
+
+std::vector<uint32_t> ObjectByCurveRotate::getIndices() const
+{
+    return indices;
+}

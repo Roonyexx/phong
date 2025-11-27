@@ -41,5 +41,5 @@ private:
 public:
     OrbitalCamera(glm::vec3 position, glm::mat4 proj);
     void orbitDelta(float deltaYaw, float deltaPitch);
-    void inputs(GLFWwindow* window);
+    void inputs(GLFWwindow* window, double dt);
 };

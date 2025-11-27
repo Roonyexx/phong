@@ -15,4 +15,7 @@ private:
     void triangle(size_t firstCurveStart, size_t secondCurveStart, uint32_t per);
 public:
     ObjectByCurveRotate(Curve const& curve, float const rotAngle);
+    
+    std::vector<Vertex> getVerts() const;
+    std::vector<uint32_t> getIndices() const;
 };
