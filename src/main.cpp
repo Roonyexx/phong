@@ -35,13 +35,13 @@ int main()
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
 
-    Curve halfCircle{ getHalfCircle(1.0f, {0.0f,0.0f,0.0f}, 6) };
-    // for (auto const& vert : halfCircle.verts)
-    // {
-    //     std::cout << vert.cord.x << " " << vert.cord.y << " " << vert.cord.z << std::endl;
-    // }
+    Curve halfCircle{ getHalfCircle(1.0f, {0.0f,0.0f,0.0f}, 20) };
+    for (auto const& vert : halfCircle.verts)
+    {
+        std::cout << vert.cord.x << " " << vert.cord.y << " " << vert.cord.z << std::endl;
+    }
 
-    ObjectByCurveRotate obj{ halfCircle, 45.0f };
+    ObjectByCurveRotate obj{ halfCircle, 10.0f };
 
     GLfloat vertices[] = 
     {
@@ -67,6 +67,7 @@ int main()
     EBO ebo(indices.data(), static_cast<GLsizeiptr>(indices.size() * sizeof(unsigned int)));
 
     vao.linkAttrib(vbo, 0, 3, GL_FLOAT, sizeof(Vertex), (void *)0);
+    vao.linkAttrib(vbo, 1, 3, GL_FLOAT, sizeof(Vertex), (void *)offsetof(Vertex, normal));
     
 
     // VAO vao;
@@ -100,7 +101,7 @@ int main()
         double dt { curTime - lastTime };
         lastTime = curTime;
 
-        //model = glm::rotate(model, glm::radians(1.0f), { 0.0f, 1.0f, 0.0f });
+        // model = glm::rotate(model, glm::radians(1.0f), { 0.0f, 1.0f, 0.0f });
         //camera.cameraMove(glm::rotate(glm::mat4(1.0f), glm::radians(1.0f), {1.0f, 0.0f, 0.0f}));
         //camera.rotateArounOrigin(glm::radians(1.0f), {1.0f, 0.0f, 0.0f}); 
         camera.inputs(window, dt);

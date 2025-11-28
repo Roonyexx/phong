@@ -1,4 +1,5 @@
 #include "ObjectByCurveRotate.hpp"
+#include <iostream>
 
 void ObjectByCurveRotate::curveRotate(float const angle)
 {
@@ -44,14 +45,41 @@ void ObjectByCurveRotate::triangle(size_t firstCurveStart, size_t secondCurveSta
         Triangle t1{ firstCurveStart + i, secondCurveStart + i, firstCurveStart + i + 1 };
         Triangle t2{ firstCurveStart + i + 1, secondCurveStart + i, secondCurveStart + i + 1 };
 
-        indices.push_back(t1.A); indices.push_back(t1.B); indices.push_back(t1.C);
-        indices.push_back(t2.A); indices.push_back(t2.B); indices.push_back(t2.C);
+        
+        if(i != 0) { indices.push_back(t1.A); indices.push_back(t1.B); indices.push_back(t1.C); }
+        if(i != (per - 1)) { indices.push_back(t2.A); indices.push_back(t2.B); indices.push_back(t2.C); }
+    }
+}
+
+void ObjectByCurveRotate::normalsCalculate()
+{
+    for (size_t i{}, len{ indices.size() - 2 }; i  < len; i += 3)
+    {
+        Vertex& p1{ verts[indices[i]] };
+        Vertex& p2{ verts[indices[i + 1]] };
+        Vertex& p3{ verts[indices[i + 2]] };
+
+
+        glm::vec3 edge1 = p2.cord - p1.cord;
+        glm::vec3 edge2 = p3.cord - p1.cord;
+
+        glm::vec3 faceNormal = glm::cross(edge1, edge2);
+
+        p1.normal += faceNormal;
+        p2.normal += faceNormal;
+        p3.normal += faceNormal;
+    }
+
+    for (auto &v : verts)
+    {
+        v.normal = glm::normalize(v.normal);
     }
 }
 
 ObjectByCurveRotate::ObjectByCurveRotate(Curve const& curve, float const rotAngle)  : curve{ curve }
 {
     curveRotate(rotAngle);
+    normalsCalculate();
 }
 
 std::vector<Vertex> ObjectByCurveRotate::getVerts() const

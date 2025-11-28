@@ -13,6 +13,7 @@ private:
 
     void curveRotate(float const angle);
     void triangle(size_t firstCurveStart, size_t secondCurveStart, uint32_t per);
+    void normalsCalculate();
 public:
     ObjectByCurveRotate(Curve const& curve, float const rotAngle);
     

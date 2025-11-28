@@ -17,6 +17,7 @@ protected:
     glm::mat4 proj;
 
     double sensitivity;
+    float speed;
 
 public:
     Camera(glm::vec3 position, glm::mat4 proj);

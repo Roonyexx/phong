@@ -2,6 +2,8 @@
 #include <glm/glm.hpp>
 #include <vector>
 #include "Vertex.hpp"
+#include <numbers>
+
 
 using Edge = std::pair<int, int>;
 
@@ -25,17 +27,14 @@ inline glm::vec3 circlePoint(float radius, glm::vec3 const& center, glm::vec2 co
 
 inline Curve getHalfCircle(float radius=1.0f, glm::vec3 const& center={0.0f,0.0f,0.0f}, uint8_t numOfPartions=6)
 {
-    float step{ 2 * radius / numOfPartions };
-    Curve curve; float y{ center.y - radius };
-    for(size_t i{}; i <= numOfPartions; i++)
+    Curve curve; float angle{ 180.0f / numOfPartions }; 
+    glm::mat4 M{ glm::translate(glm::mat4(1.0f), center)};
+    M = glm::rotate(M, glm::radians(angle), {0.0f, 0.0f, 1.0f});
+    curve.verts.push_back({center.x, center.y - radius, center.z});
+    for(size_t i{}; i < numOfPartions; i++)
     {
-        Vertex vert;
-        vert.cord = circlePoint(radius, center, {y, center.z});
+        Vertex vert = transformVertex(curve.verts[i], M);
         curve.verts.push_back(vert);
-        y += step;
     }
-
-    // for(size_t i{}, len{ numOfPartions }; i < len; i++)
-    //     curve.edges.push_back({i, i+1});
     return curve;
 }
