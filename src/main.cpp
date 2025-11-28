@@ -36,24 +36,7 @@ int main()
 
 
     Curve halfCircle{ getHalfCircle(1.0f, {0.0f,0.0f,0.0f}, 20) };
-    for (auto const& vert : halfCircle.verts)
-    {
-        std::cout << vert.cord.x << " " << vert.cord.y << " " << vert.cord.z << std::endl;
-    }
-
-    ObjectByCurveRotate obj{ halfCircle, 10.0f };
-
-    GLfloat vertices[] = 
-    {
-        -0.5f, -0.5f * float(sqrt(3)) / 3, 0.0f, 0.0f, 128 / 255.0f, 255 / 255.0f, 
-        0.5f, -0.5f * float(sqrt(3)) / 3, 0.0f, 255 / 255.0f, 0 / 255.0f, 0 / 255.0f,
-        0.0f, 0.5f * float(sqrt(3)) * 2 / 3, 0.0f, 255.0f, 153 / 255.0f, 0 / 255.0f
-    };
-
-    GLuint indices1[] = 
-    {
-        0, 1, 2
-    };
+    ObjectByCurveRotate obj{ halfCircle, 5.0f };
 
     Shader shaderProgram("res/shaders/default.vert", "res/shaders/default.frag");
 
@@ -68,21 +51,9 @@ int main()
 
     vao.linkAttrib(vbo, 0, 3, GL_FLOAT, sizeof(Vertex), (void *)0);
     vao.linkAttrib(vbo, 1, 3, GL_FLOAT, sizeof(Vertex), (void *)offsetof(Vertex, normal));
-    
 
-    // VAO vao;
-    // vao.bind();
-
-    // VBO vbo(vertices, sizeof(vertices));
-    // EBO ebo(indices, sizeof(indices));
-
-    // vao.linkAttrib(vbo, 0, 3, GL_FLOAT, 6*sizeof(float), (void *)0);
-    // vao.linkAttrib(vbo, 1, 3, GL_FLOAT, 6*sizeof(float), (void *)(3 * sizeof(float)));
-
-    glm::mat4 model{ 1.0f }, view{ 1.0f }, proj{ glm::perspective(glm::radians(45.0f), (float)width / height, 0.1f, 100.0f) };
+    glm::mat4 model{ 1.0f }, proj{ glm::perspective(glm::radians(45.0f), (float)width / height, 0.1f, 100.0f) };
     GLint modelLoc{ glGetUniformLocation(shaderProgram.id, "model") };
-
-    //view = glm::translate(view, { 0.0f, 0.0f, -3.0f });
 
     OrbitalCamera camera{ {0.0f, 0.0f, 6.0f}, proj };
 
@@ -101,15 +72,10 @@ int main()
         double dt { curTime - lastTime };
         lastTime = curTime;
 
-        // model = glm::rotate(model, glm::radians(1.0f), { 0.0f, 1.0f, 0.0f });
-        //camera.cameraMove(glm::rotate(glm::mat4(1.0f), glm::radians(1.0f), {1.0f, 0.0f, 0.0f}));
-        //camera.rotateArounOrigin(glm::radians(1.0f), {1.0f, 0.0f, 0.0f}); 
         camera.inputs(window, dt);
 
         shaderProgram.activate();
         glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-        // glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
-        // glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(proj));
         camera.setCameraMatrix(shaderProgram, "camMat");
 
         vao.bind();

@@ -12,32 +12,30 @@ uniform vec3 camPos;
 
 void main()
 {
-    vec3 worldPos = vec3(model * vec4(aPos, 1.0));
-    vec3 N = normalize(mat3(model) * normal);
+   vec3 worldPos = vec3(model * vec4(aPos, 1.0));
+   vec3 N = normalize(mat3(model) * normal);
+   vec3 lightPos = vec3(-5.0, 5.0, 5.0);
 
-    vec3 lightPos = vec3(-5.0, 5.0, 5.0);
+   float Ka = 0.2f;
+   float Kd = 0.7f;
+   float Ks = 0.2f;
+   float shininess = 8.0f;
+   float Ia = 0.3f;
+   float Il = 5.0f;
+   float k = 1.0f;
 
-    float Ka = 0.2f;
-    float Kd = 0.7f;
-    float Ks = 0.2f;
-    float shininess = 8.0f;
-    float Ia = 0.3f;
-    float Il = 5.0f;
-    float k = 1.0f;
+   vec3 L = normalize(lightPos - worldPos);
+   vec3 V = normalize(camPos - worldPos);
 
-    vec3 L = normalize(lightPos - worldPos);
-    vec3 V = normalize(camPos - worldPos);
+   float NL = max(dot(N, L), 0.0);
 
-    float NL = max(dot(N, L), 0.0);
+   vec3 R = reflect(-L, N);
+   float RS = max(dot(R, V), 0.0);
+   float d = distance(worldPos, lightPos);
 
-    vec3 R = reflect(-L, N);
-    float RS = max(dot(R, V), 0.0);
+   vec3 intensity = vec3(Ia * Ka + (Il / (k + d)) * (Kd * NL + Ks * pow(RS, shininess)));
 
-    float d = distance(worldPos, lightPos);
+   color = intensity + vec3(0.4f, 0.4f, 0.4f);
 
-    vec3 intensity = vec3(Ia * Ka + (Il / (k + d)) * (Kd * NL + Ks * pow(RS, shininess)));
-
-    color = intensity + vec3(0.2f, 0.2f, 0.2f);
-
-    gl_Position = proj * view * model * vec4(aPos, 1.0);
+   gl_Position = proj * view * model * vec4(aPos, 1.0);
 }
