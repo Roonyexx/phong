@@ -10,7 +10,9 @@ using Edge = std::pair<int, int>;
 struct Curve
 {
     std::vector<Vertex> verts;
-    std::vector<Edge> edges;
+
+    Curve(const std::vector<Vertex>& v) : verts{ v } { }
+    Curve() = default;
 };
 
 inline glm::vec3 circlePoint(float radius, glm::vec3 const& center, glm::vec2 const& yz) //(x-x)^2 + (y-y)^2 = r^2

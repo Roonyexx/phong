@@ -19,6 +19,8 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
     glViewport(0,0,width,height);
 }
 
+
+
 int main() 
 {
     int const width{ 800 }, height{ 800 }; 
@@ -35,8 +37,25 @@ int main()
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
 
-    Curve halfCircle{ getHalfCircle(1.0f, {0.0f,0.0f,0.0f}, 20) };
-    ObjectByCurveRotate obj{ halfCircle, 5.0f };
+    Curve halfCircle{ getHalfCircle(1.0f, {0.0f,0.0f,0.0f}, 18) };
+    Curve triangle{ {
+        Vertex{ 0.0f, -1.0f, 0.0f },
+        Vertex{ 1.0f,  -1.0f, 0.0f },
+        Vertex{ 0.0f,  1.0f, 0.0f }
+    } };
+    Curve rectangle{ {
+        Vertex{ 0.0f, -1.0f, 0.0f },
+        Vertex{ -1.0f,  -1.0f, 0.0f },
+        Vertex{ -1.0f,  1.0f, 0.0f },
+        Vertex{ 0.0f, 1.0f, 0.0f }
+    } };
+
+    ObjectByCurveRotate ball{ halfCircle, 10.0f };
+    ObjectByCurveRotate cone{ triangle, 5.0f };
+    ObjectByCurveRotate cylinder{ rectangle, 5.0f };
+
+    ObjectByCurveRotate& obj{ ball };
+
 
     Shader shaderProgram("res/shaders/default.vert", "res/shaders/default.frag");
 
@@ -47,7 +66,7 @@ int main()
     auto indices = obj.getIndices();
 
     VBO vbo(verts.data(), static_cast<GLsizeiptr>(verts.size() * sizeof(Vertex)));
-    EBO ebo(indices.data(), static_cast<GLsizeiptr>(indices.size() * sizeof(unsigned int)));
+    EBO ebo(indices.data(), static_cast<GLsizeiptr>(indices.size() * sizeof(uint32_t)));
 
     vao.linkAttrib(vbo, 0, 3, GL_FLOAT, sizeof(Vertex), (void *)0);
     vao.linkAttrib(vbo, 1, 3, GL_FLOAT, sizeof(Vertex), (void *)offsetof(Vertex, normal));
