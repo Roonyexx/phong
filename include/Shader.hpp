@@ -10,6 +10,7 @@ public:
     GLuint id;
 
     Shader(std::string const& vertexFile, std::string const& fragmentfile);
+    void linkGeometryShader(std::string const& geometryFile);
     void activate();
     void remove();
 };

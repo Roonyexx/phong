@@ -16,7 +16,7 @@ void main()
    vec4 worldPos4 = model * vec4(aPos, 1.0);
    FragPos = vec3(worldPos4);
 
-   Normal =  aNormal;
+   Normal = mat3(model) * aNormal;
 
    gl_Position = proj * view * worldPos4;
 }

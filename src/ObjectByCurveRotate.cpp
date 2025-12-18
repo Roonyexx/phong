@@ -47,9 +47,9 @@ void ObjectByCurveRotate::triangle(size_t firstCurveStart, size_t secondCurveSta
 
         
         // if(i != 0) 
-        { indices.push_back(t1.A); indices.push_back(t1.B); indices.push_back(t1.C); }
+        indices.push_back(t1.A); indices.push_back(t1.B); indices.push_back(t1.C);
         //if(i != (per - 1)) 
-        { indices.push_back(t2.A); indices.push_back(t2.B); indices.push_back(t2.C); }
+        indices.push_back(t2.A); indices.push_back(t2.B); indices.push_back(t2.C);
     }
 }
 

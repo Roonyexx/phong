@@ -42,6 +42,21 @@ Shader::Shader(std::string const &vertexFile, std::string const &fragmentFile)
     glDeleteShader(fragmentShader);
 }
 
+void Shader::linkGeometryShader(std::string const &geometryFile)
+{
+    std::string geometryCode{ getFileContent(geometryFile) };
+    const char *geometrySource{ geometryCode.c_str() };
+
+    GLuint geometryShader{ glCreateShader(GL_GEOMETRY_SHADER) };
+    glShaderSource(geometryShader, 1, &geometrySource, NULL);
+    glCompileShader(geometryShader);
+
+    glAttachShader(id, geometryShader);
+    glLinkProgram(id);
+
+    glDeleteShader(geometryShader);
+}
+
 void Shader::activate()
 {
     glUseProgram(id);
